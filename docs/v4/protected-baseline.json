@@ -1,0 +1,14 @@
+{
+  "src/analysis/conditions.ts": "bb1fa9dea67f44020b7d0cc862e56e430d223e538a7e38defbb4f663e01e467f",
+  "src/analysis/data.ts": "706c2c57b825445d68291db610eb01c7183c244da25134e570c0f8be7db780db",
+  "src/analysis/engine.ts": "bd0ab4e2eb4f604a3d079d59dc36c17ac063452a070ee9b6f2fbf5031be03b2c",
+  "src/analysis/optimization.ts": "c0d2cec2faabe1d7b57a54e552d87158fbb046b98ddb8eb5beb869b444911450",
+  "src/analysis/scoring.ts": "ad38952cf863c8ca266137731ca144481dafb51ad05ec3b2ec2629a177224906",
+  "src/analysis/types.ts": "fa4626f72bb750904a64a4e3cb0c620fd4e45bb51c777c85b3daf23f46299e86",
+  "src/analysis/__tests__/catalog.test.ts": "08ddaf6c901bb909ee92b1603c18d783c8ace9631901cc666377b4f75589ead0",
+  "src/analysis/__tests__/engine.test.ts": "32003b9ab51e27555e61db5252d1e0bbef37c3cb308946f276b2bf880f957faa",
+  "src/data/cart_interactions_dataset.json": "dafe6d8b9c1707f6ffe8716f6a12cef67d695a7ef7890acaf3feb2e5094a43f0",
+  "src/data/supplement_interactions_with_lactose_ko.json": "dd2817efdd18cd2ae044f49c99aa1b2969544f525f7c65276a02274d2566575e",
+  "docs/PRD.md": "838c04063e1422e61c00674cba13f91dc21841f18f1f64b6bf3c7e67a0a54165",
+  "docs/SCORING_POLICY.md": "2ab4fa6ac7e4b064775e34c21b68f366f97d3ebefc1e049a5c987a7e3a0bb707"
+}

@@ -1,0 +1,31 @@
+@import 'pretendard/dist/web/variable/pretendardvariable.css';
+
+:root {
+  font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, sans-serif;
+  color: #111318; background: #f4f6f8; font-synthesis: none;
+  text-rendering: optimizeLegibility; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  --background: #ffffff; --surface: #f4f6f8; --text: #111318; --muted: #6b7280;
+  --accent: #55789b; --accent-light: #e8f0f6; --line: #eceef1; --warning: #ba715f;
+}
+* { box-sizing: border-box; }
+html { overscroll-behavior-x: none; }
+body { margin: 0; min-width: 320px; width: 100%; overscroll-behavior-x: none; }
+button, input, select { font: inherit; }
+button, a, input, select { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; color: inherit; border: 0; background: none; }
+button:disabled { cursor: not-allowed; opacity: .45; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, summary:focus-visible {
+  outline: 3px solid var(--accent); outline-offset: 4px;
+}
+a { color: var(--accent); }
+h1, h2, h3, p { margin: 0; }
+img { display: block; max-width: 100%; -webkit-user-drag: none; user-select: none; }
+svg { flex-shrink: 0; }
+::selection { background: var(--accent-light); }
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
