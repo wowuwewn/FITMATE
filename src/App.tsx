@@ -14,12 +14,14 @@ import { cartKey, normalizeSaved } from './lib/saved'
 import type { SavedCombination } from './lib/saved'
 import { useStoredState } from './lib/storage'
 import { Intro } from './components/Intro'
+import { HomeCover } from './components/HomeCover'
 import { shouldShowIntro } from './lib/intro'
 import { ProductDetails } from './components/ProductDetails'
 import type { Product } from './lib/catalog'
 import type { ExploreRequest } from './lib/categories'
 import './App.css'
 import './styles/v4.css'
+import './styles/refinements.css'
 
 const Result = lazy(() => import('./screens/Result').then(module => ({ default: module.Result })))
 const Optimize = lazy(() => import('./screens/Optimize').then(module => ({ default: module.Optimize })))
@@ -37,9 +39,16 @@ function App() {
   const [screen, setScreen] = useState<Screen>(screenFromHash)
   const [cart, setCart, cartStorageAvailable] = useStoredState<CartItem[]>('fitmate.cart.v1', [], normalizeCart)
   const [combinations, setCombinations, savedStorageAvailable] = useStoredState<SavedCombination[]>('fitmate.saved.v1', [], normalizeSaved)
-  const [previousCart, setPreviousCart, previousStorageAvailable] = useStoredState<CartItem[]>('fitmate.previous-cart.v1', [], normalizeCart)
   const [toast, setToast] = useState('')
   const [intro, setIntro] = useState(shouldShowIntro)
+  const [cover, setCover] = useState(() => screenFromHash() === 'home')
+  useEffect(() => {
+    // Replay on entry, refresh and restored browser pages, including hot updates.
+    const showLogo = () => setIntro(true)
+    showLogo()
+    window.addEventListener('pageshow', showLogo)
+    return () => window.removeEventListener('pageshow', showLogo)
+  }, [])
   const [exploreRequest, setExploreRequest] = useState<ExploreRequest>({})
   const [product, setProduct] = useState<Product | null>(null)
   const [replacement, setReplacement] = useState<AppliedReplacement | null>(null)
@@ -85,7 +94,6 @@ function App() {
   }, [toast, cart])
 
   function addProduct(id: string) {
-    setPreviousCart([])
     setReplacement(null)
     const existing = cart.find(item => item.productId === id)
     if (existing && existing.quantity >= 99) { setToast('용기는 제품별 최대 99개까지 담을 수 있어요'); return }
@@ -93,12 +101,10 @@ function App() {
     setToast(`${productById.get(id)?.name} 담았어요`)
   }
   function changeQuantity(id: string, quantity: number) {
-    setPreviousCart([])
     setReplacement(null)
     setCart(current => normalizeCart(current.map(item => item.productId === id ? { ...item, quantity } : item)))
   }
   function removeProducts(ids: string[]) {
-    setPreviousCart([])
     setReplacement(null)
     setCart(current => current.filter(item => !ids.includes(item.productId)))
     setToast('선택한 제품을 삭제했어요')
@@ -111,7 +117,7 @@ function App() {
     setToast('내 정보에 조합을 저장했어요')
   }
   async function copySummary() {
-    const text = `Fitmate 조합: ${cart.map(item => productById.get(item.productId)?.name).join(', ')}. 시연용 조합 비교 지표 ${analysis.score.value ?? '계산 불가'}/100. 주의·중복 규칙 ${analysis.findings.length}건. 함량 미확인 ${analysis.coverage.unknownAmounts}개, 추가 조건 ${analysis.deferredRules.length}개 보류. 의학적 안전성 평가가 아니며 전문가 검증이 필요합니다.`
+    const text = `Fitmate 조합: ${cart.map(item => productById.get(item.productId)?.name).join(', ')}. 조합 점수 ${analysis.score.value ?? '계산 불가'}/100. 주의·중복 규칙 ${analysis.findings.length}건. 함량 미확인 ${analysis.coverage.unknownAmounts}개, 추가 조건 ${analysis.deferredRules.length}개 보류. 의학적 안전성 평가가 아니며 전문가 검증이 필요합니다.`
     try { await navigator.clipboard.writeText(text); setToast('분석 요약을 복사했어요') }
     catch { setToast('이 브라우저에서는 복사를 사용할 수 없어요') }
   }
@@ -121,30 +127,29 @@ function App() {
       case 'explore':
         return <Explore cart={cart} onAdd={addProduct} onRemove={removeProducts} onBack={() => navigate(exploreOrigin.current)} request={exploreRequest} onProduct={setProduct} />
       case 'cart':
-        return <Cart cart={cart} analysis={analysis} previousCart={previousCart} onQuantity={changeQuantity} onRemove={removeProducts} onExplore={() => navigate('explore')} onDemo={() => { setCart(demoCart.map(item => ({ ...item }))); setPreviousCart([]); setReplacement(null); navigate('cart') }} onReport={() => navigate('result')} onOptimize={() => navigate('optimize')} onSave={saveCombination} saved={isSaved} />
+        return <Cart cart={cart} analysis={analysis} onQuantity={changeQuantity} onRemove={removeProducts} onExplore={() => navigate('explore')} onDemo={() => { setCart(demoCart.map(item => ({ ...item }))); setReplacement(null); navigate('cart') }} onOptimize={() => navigate('optimize')} onSave={saveCombination} saved={isSaved} />
       case 'result':
-        return <Result analysis={analysis} previousCart={previousCart} replacement={replacement} onBack={() => navigate('cart')} onOptimize={() => navigate('optimize')} onSave={saveCombination} saved={isSaved} onCopy={copySummary} />
+        return <Result analysis={analysis} replacement={replacement} onBack={() => navigate('cart')} onOptimize={() => navigate('optimize')} onSave={saveCombination} saved={isSaved} onCopy={copySummary} />
       case 'optimize':
         return <Optimize cart={cart} before={analysis} onBack={() => navigate('result')} onApply={(sourceId, targetId) => {
           const candidate = getReplacementCandidates(cart, sourceId, analysisDataset).find(item => item.product.product_id === targetId)
           if (!candidate) { setToast('등록된 성분으로 비교할 수 있는 제품을 선택해주세요'); return }
-          setPreviousCart(cart.map(item => ({ ...item })))
           setCart(candidate.items)
           setReplacement({ fromName: productById.get(sourceId)?.name ?? sourceId, toName: productById.get(targetId)?.name ?? targetId })
           navigate('result')
           setToast('변경된 조합을 다시 분석했어요')
         }} />
       case 'saved':
-        return <Saved combinations={combinations} onLoad={combination => { setCart(combination.items.map(item => ({ ...item }))); setPreviousCart([]); setReplacement(null); navigate('cart'); setToast('보관한 조합을 불러왔어요') }} onRemove={id => { setCombinations(current => current.filter(item => item.id !== id)); setToast('보관한 조합을 삭제했어요') }} onExplore={() => navigate('explore')} />
+        return <Saved combinations={combinations} onLoad={combination => { setCart(combination.items.map(item => ({ ...item }))); setReplacement(null); navigate('cart'); setToast('보관한 조합을 불러왔어요') }} onRemove={id => { setCombinations(current => current.filter(item => item.id !== id)); setToast('보관한 조합을 삭제했어요') }} onExplore={() => navigate('explore')} />
       default:
-        return <Home navigate={navigate} count={count} cart={cart} onAdd={addProduct} onRemove={removeProducts} onExplore={explore} onProduct={setProduct} onExample={items => { setCart(items.map(item => ({ ...item }))); setPreviousCart([]); setReplacement(null); navigate('cart'); setToast('예시 조합을 적용했어요') }} />
+        return <Home navigate={navigate} count={count} cart={cart} onAdd={addProduct} onRemove={removeProducts} onExplore={explore} onProduct={setProduct} onExample={items => { setCart(items.map(item => ({ ...item }))); setReplacement(null); navigate('cart'); setToast('조합을 적용했어요') }} />
     }
   }
 
   return (
     <MotionConfig reducedMotion="user">
       <div className="app-shell">
-        <div inert={intro}>
+        <div inert={intro || (cover && effectiveScreen === 'home')}>
           <AnimatePresence mode="wait" initial={false}>
             <motion.main key={effectiveScreen} initial={{ opacity: reducedMotion ? 1 : 0 }} animate={{ opacity: 1 }} exit={{ opacity: reducedMotion ? 1 : 0 }} transition={{ duration: reducedMotion ? 0 : .18 }} onAnimationComplete={() => {
               if (effectiveScreen !== currentScreen.current) return
@@ -163,10 +168,11 @@ function App() {
             ))}
           </nav>}
         </div>
+        {!intro && cover && effectiveScreen === 'home' && <HomeCover count={count} onEnter={() => setCover(false)} onSearch={() => { setCover(false); explore() }} onCart={() => { setCover(false); navigate('cart') }} />}
         <AnimatePresence>{intro && <Intro onComplete={finishIntro} />}</AnimatePresence>
         {product && <ProductDetails product={product} count={cart.find(item => item.productId === product.product_id)?.quantity ?? 0} onClose={() => setProduct(null)} onAdd={addProduct} onRemove={removeProducts} />}
         {toast && <div className="toast" role="status"><span><Check size={17} />{toast}</span>{toast.endsWith('담았어요') ? <button onClick={() => navigate('cart')}>조합함 보기</button> : <button aria-label="알림 닫기" onClick={() => setToast('')}><X size={15} /></button>}</div>}
-        {(!cartStorageAvailable || !savedStorageAvailable || !previousStorageAvailable) && <div className="storage-notice" role="status">이 브라우저에서는 변경 내용이 새로고침 후 유지되지 않아요.</div>}
+        {(!cartStorageAvailable || !savedStorageAvailable) && <div className="storage-notice" role="status">이 브라우저에서는 변경 내용이 새로고침 후 유지되지 않아요.</div>}
       </div>
     </MotionConfig>
   )

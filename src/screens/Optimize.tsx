@@ -36,8 +36,8 @@ export function Optimize({ cart, before, onBack, onApply }: Props) {
     : before.coverage.missingIngredientProducts || before.coverage.unregisteredIngredients || before.coverage.skippedRules ? '조합의 성분·필수 조건 정보가 부족해 비교 후보를 선정할 수 없어요.'
       : !target ? '등록 성분이 겹치는 비교 후보가 없어 추천할 수 없어요.'
         : delta === null ? '분석 정보가 부족해 점수로 비교할 수 없어요.'
-          : delta === 0 ? '등록된 규칙에서 지표 개선 차이를 확인하지 못했어요.'
-            : delta! < 0 ? '비교 지표가 낮아졌어요. 새로 확인할 관계를 살펴보세요.'
+          : delta === 0 ? '점수 변화가 없어요.'
+            : delta! < 0 ? '점수가 낮아졌어요. 새로 확인된 관계를 살펴보세요.'
               : '등록된 규칙에 매칭되는 관계가 줄어드는 구성이에요.'
   const addedKeys = new Set(comparison?.addedCauses.map(item => item.causeKey) ?? [])
   const retained = cart.filter(item => item.productId !== sourceId)
@@ -53,7 +53,7 @@ export function Optimize({ cart, before, onBack, onApply }: Props) {
       <div className="comparison-score-row"><div className="comparison-column"><div className="comparison-heading"><h2>현재 조합</h2><span data-testid="before-score">{before.score.value ?? '—'}<small>점</small></span></div></div><ArrowRight className="comparison-direction" size={34} />
         <motion.div className="comparison-column comparison-panel--proposed" initial={{ opacity: reduced ? 1 : 0 }} animate={{ opacity: 1 }} transition={{ duration: reduced ? 0 : .24 }}><div className="comparison-heading"><h2>변경 조합</h2><span data-testid="after-score"><ComparisonNumber value={comparison?.after.score.value ?? null} from={before.score.value} /><small>점</small></span></div></motion.div>
       </div>
-      <div className="comparison-subline"><span className="comparison-score-note">시연용 조합 비교 지표</span>{typeof delta === 'number' && <span className="demo-score-delta">{delta === 0 ? '변화 없음' : (delta > 0 ? '+' : '') + delta + '점'}</span>}</div>
+      <div className="comparison-subline"><span className="comparison-score-note">조합 점수</span>{typeof delta === 'number' && <span className="demo-score-delta">{delta === 0 ? '변화 없음' : (delta > 0 ? '+' : '') + delta + '점'}</span>}</div>
       <div className="replacement-products">{sourceProduct ? <div className="replacement-product"><ProductImage product={sourceProduct} /><strong>{sourceProduct.name}</strong><p>{sourceProduct.subtitle}</p></div> : <p>교체 가능한 보충제가 없어요.</p>}<ArrowRight size={22} />
         {targetProduct ? <motion.div key={targetProduct.product_id} className="replacement-product replacement-product--next" initial={{ opacity: reduced ? 1 : 0, x: reduced ? 0 : 8 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: reduced ? 0 : .45 }}><ProductImage product={targetProduct} /><strong>{targetProduct.name}</strong><p>{targetProduct.subtitle}</p></motion.div> : <p>비교 후보가 없어요.</p>}
       </div><p className="comparison-limit">함량·효능의 동등성이나 안전성을 비교한 값이 아니에요.</p>

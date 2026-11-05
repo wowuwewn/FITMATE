@@ -38,6 +38,6 @@ export function IngredientRelations({ analysis }: { analysis: AnalysisResult }) 
       <p className="relation-condition"><Info size={17} /><span>상세 조건 {finding.detailedEvaluation.status === 'met' ? '확인' : '미확인'} · {finding.detailedEvaluation.reason}</span></p>
       <button className="relation-evidence" onClick={() => setEvidence(true)}>이 관계의 출처와 적용 범위 <ArrowRight size={18} /></button>
     </div>
-    {evidence && <Sheet title="성분 관계 근거" onClose={() => setEvidence(false)}><FindingList findings={analysis.findings.filter(item => item.causeKey === deduction.causeKey)} /><p className="sheet-intro">감점은 시연용 비교 정책이며, 데이터셋의 근거 수준과 별개예요. 개인별 복용 지침은 의료진·약사와 확인해주세요.</p></Sheet>}
+    {evidence && <Sheet title="성분 관계 근거" onClose={() => setEvidence(false)}><FindingList findings={analysis.findings.filter(item => item.causeKey === deduction.causeKey)} /><p className="sheet-intro">점수는 성분 관계를 비교한 값이에요. 개인별 복용 지침은 의료진·약사와 확인해주세요.</p></Sheet>}
   </section>
 }

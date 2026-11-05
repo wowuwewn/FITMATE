@@ -41,14 +41,14 @@ export function Explore({ cart, onAdd, onRemove, onBack, request, onProduct }: {
       </div>
       {filters && <div className="catalog-filters" id="catalog-filters">
         <label>정렬<select value={sort} onChange={event => setSort(event.target.value)}><option value="default">기본순</option><option value="name">이름순</option></select></label>
-        <label className="checkbox-label"><input type="checkbox" checked={onlyAvailableImage} onChange={event => setOnlyAvailableImage(event.target.checked)} />시연 이미지가 있는 제품만</label>
+        <label className="checkbox-label"><input type="checkbox" checked={onlyAvailableImage} onChange={event => setOnlyAvailableImage(event.target.checked)} />이미지가 있는 제품만</label>
       </div>}
       <div className="catalog-list">
         {visible.map(product => {
           const count = cart.find(item => item.productId === product.product_id)?.quantity ?? 0
           return <article className="product-row" key={product.product_id}>
             <BrowseButton className="product-image-button" aria-label={`${product.name} 이미지로 상세 보기`} onClick={() => onProduct(product)}><ProductImage product={product} /></BrowseButton>
-            <BrowseButton className="product-copy" title={product.display_name} aria-label={`${product.name} 상세 보기`} onClick={() => onProduct(product)}>
+            <BrowseButton className="product-copy" title={product.name} aria-label={`${product.name} 상세 보기`} onClick={() => onProduct(product)}>
               <h2>{product.name}</h2><p>{product.subtitle}</p>
               <span className="product-meta">{product.category === 'medication' ? '복용약 확인용' : '함량 미등록'}</span>
             </BrowseButton>
@@ -60,7 +60,7 @@ export function Explore({ cart, onAdd, onRemove, onBack, request, onProduct }: {
         })}
       </div>
       {visible.length === 0 && <div className="empty-state search-empty"><Search /><h2>{!query && !onlyAvailableImage && category !== '전체' && !medications ? '아직 등록된 제품이 없어요' : '검색 결과가 없어요'}</h2><p>{!query && category !== '전체' && !medications ? `${category} 제품 데이터가 준비되면 여기에서 볼 수 있어요.` : '다른 제품명이나 성분으로 찾아보세요.'}</p><button className="text-button" onClick={() => { setQuery(''); setCategory('전체'); setOnlyAvailableImage(false) }}>필터 초기화</button></div>}
-      <p className="catalog-note">등록 제품과 패키지는 시연용이에요. 실제 함량과 개인 복용 조건은 별도로 확인해주세요.</p>
+
     </section>
   )
 }
