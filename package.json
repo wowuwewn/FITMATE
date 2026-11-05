@@ -10,6 +10,7 @@
     "test": "npm run test:unit && npm run test:e2e",
     "test:unit": "vitest run src/analysis/__tests__ server/__tests__",
     "test:e2e": "playwright test",
+    "test:smoke": "playwright test tests/release-smoke.spec.ts",
     "preview": "vite preview"
   },
   "dependencies": {

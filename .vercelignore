@@ -1,0 +1,14 @@
+# Only application sources and build configuration belong in deployment uploads.
+artifacts/
+docs/
+prototypes/
+scripts/
+tests/
+test-results/
+playwright-report/
+.git/
+.env*
+*.tsbuildinfo
+AGENTS.md
+README.md
+playwright.config.ts

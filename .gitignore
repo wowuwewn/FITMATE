@@ -29,3 +29,7 @@ dist-ssr
 .env
 .env.*
 !.env.example
+
+# Local release captures, media and incremental compiler state
+artifacts/
+*.tsbuildinfo

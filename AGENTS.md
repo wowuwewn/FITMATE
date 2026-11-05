@@ -76,3 +76,17 @@ authentication system without approval.
 7. Fix visual inconsistencies before proceeding.
 
 Do not generate the entire application at once.
+
+## Final release verification
+- Preserve the completed Astra V4 integration. Do not repeat design integration.
+- Start with `npm run test:smoke`: real catalog selection, P02+M02=88/R06,
+  P02 to P01=100, saved combination reload, offline rule explanations,
+  mobile gestures and mobile/desktop layout.
+- For a deployed app set `PLAYWRIGHT_BASE_URL` to its verified production URL.
+- Run build and lint once after edits, plus tests directly related to changes.
+  Repeat only failed checks after fixes. Expand to the full suite only for
+  changes to the analysis engine, scoring, shared state or unresolved regressions.
+- Store all new recordings, rendered videos and release QA in `artifacts/`.
+  Keep them outside `public/` and `src/`; `.vercelignore` excludes them.
+- Original design assets and prototypes belong in `docs/` or `prototypes/`;
+  preserve them without shipping unused originals in `public/`.
