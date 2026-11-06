@@ -4,6 +4,8 @@
 
 제품 탐색 → 조합함에 담기 → 분석 근거 확인 → 교체 비교 → 내 조합 저장
 
+[서비스 바로가기](https://fitmate-team3.vercel.app/) · [기술 스택](#03-기술-스택) · [기술적 문제 해결](#05-기술적-문제와-구현) · [로컬 실행](#06-실행과-검증)
+
 <p>
   <img src="docs/screenshots/home.webp" width="230" alt="FITMATE 홈: 제품 검색과 조합 탐색" />
   <img src="docs/screenshots/analysis.webp" width="230" alt="조합함: 프로틴 B와 레보티록신 경구제의 비교 점수 88점" />
@@ -12,7 +14,7 @@
 
 현재 코드를 로컬에서 실행한 실제 화면입니다. 가상 제품 데이터와 시연용 비교 점수를 사용하며, **100점도 의학적 안전성을 보장하지 않습니다.** 실제 섭취량·복용 시간·개인 상태에 대한 의학적 판단은 제공하지 않습니다.
 
-## 핵심 기능
+## 01. 핵심 기능
 
 - **제품 탐색과 조합 구성** — 제품·성분 검색, 카테고리 필터, 별도의 복용약 탐색, 담기·취소·수량 변경.
 - **근거를 확인하는 분석** — 등록된 성분 ID로 제품 쌍을 비교하고, 관련 규칙·출처·감점 계산과 정보 부족을 함께 표시.
@@ -21,7 +23,7 @@
 
 예를 들어 P02(프로틴 B)+M02(레보티록신 경구제)는 R06에 따라 88점으로 표시됩니다. P02를 P01(프로틴 A)로 교체하면 같은 엔진이 100점으로 계산합니다. 이는 등록된 성분 관계의 차이이며 안전성 개선의 보장이 아닙니다.
 
-## 프로젝트와 기여 범위
+## 02. 프로젝트와 기여 범위
 
 해커톤에서 출발한 프로젝트입니다. 팀의 아이디어 기획·발표 활동과 현재 웹 서비스 개발 범위를 구분합니다.
 
@@ -32,24 +34,46 @@
 
 기획 문서는 [PRD](docs/PRD.md), 실제 지원 범위는 [분석 엔진 문서](docs/ANALYSIS_ENGINE.md)에 정리했습니다. 기획에 포함된 모든 기능이 구현된 것은 아닙니다.
 
-## 기술 선택
+## 03. 기술 스택
+
+### Frontend
 
 <p>
-  <img src="docs/icons/react.svg" width="40" height="40" alt="React" title="React" />&nbsp;&nbsp;
-  <img src="docs/icons/typescript.svg" width="40" height="40" alt="TypeScript" title="TypeScript" />&nbsp;&nbsp;
-  <img src="docs/icons/vite.svg" width="40" height="40" alt="Vite" title="Vite" />&nbsp;&nbsp;
-  <img src="docs/icons/vitest.svg" width="40" height="40" alt="Vitest" title="Vitest" />&nbsp;&nbsp;
-  <img src="docs/icons/playwright.svg" width="40" height="40" alt="Playwright" title="Playwright" />
+  <img src="docs/badges/react.svg" height="24" alt="React" />
+  <img src="docs/badges/typescript.svg" height="24" alt="TypeScript" />
+  <img src="docs/badges/vite.svg" height="24" alt="Vite" />
+  <img src="docs/badges/motion.svg" height="24" alt="Motion for React" />
 </p>
 
-- **React · TypeScript · Vite** — 화면과 분석 도메인을 분리하고, 제품·성분·결과를 타입으로 연결하는 정적 웹 앱입니다.
-- **로컬 JSON · localStorage** — 분석은 서버 요청 없이 재현 가능한 순수 함수로 실행합니다. 저장한 제품 구성은 검증·정규화해 복원하고, 저장 실패를 사용자에게 알립니다.
-- **Motion for React** — 제품 선택·화면 전환·점수 변화를 전달하며, `prefers-reduced-motion`을 반영합니다.
-- **Vitest · Playwright** — 계산·예외 조건과 실제 브라우저의 검색·교체·저장·제스처를 나눠 검증합니다.
+React와 TypeScript로 화면과 분석 도메인을 분리하고 결과를 타입으로 연결했습니다. Vite로 정적 앱을 빌드하며, Motion은 제품 선택·화면 전환·점수 변화에 적용하고 감소 모션 설정을 반영합니다.
 
-아이콘 출처와 라이선스: [Devicon](docs/icons/LICENSE).
+### Data & Storage
 
-## 데이터 흐름과 구조
+<p>
+  <img src="docs/badges/json.svg" height="24" alt="Local JSON" />
+  <img src="docs/badges/localstorage.svg" height="24" alt="localStorage" />
+</p>
+
+로컬 JSON과 순수 함수로 서버 요청 없이 분석을 재현합니다. 저장한 제품 구성은 검증·정규화해 복원하고, 저장 실패를 사용자에게 알립니다.
+
+### Testing
+
+<p>
+  <img src="docs/badges/vitest.svg" height="24" alt="Vitest" />
+  <img src="docs/badges/playwright.svg" height="24" alt="Playwright" />
+</p>
+
+계산·예외 조건은 Vitest로, 실제 브라우저의 검색·교체·저장·제스처는 Playwright로 나눠 검증합니다.
+
+### Deploy
+
+<p>
+  <img src="docs/badges/vercel.svg" height="24" alt="Vercel" />
+</p>
+
+Vercel에 Vite 빌드 결과를 배포합니다. 현재 서비스 실행에는 별도 API 서버·DB·인증 설정이 필요하지 않습니다.
+
+## 04. 데이터 흐름과 구조
 
 1. **제품 입력** — 탐색에서 제품을 선택하면 `App`의 `cart`에 제품 ID와 용기 수량을 반영합니다.
 2. **데이터 연결** — `data.ts`가 두 원본 JSON을 `analysisDataset`으로 연결합니다.
@@ -66,7 +90,7 @@
 | UI | [screens](src/screens/) · [components](src/components/) | 화면과 공통 컴포넌트 |
 | 원본 데이터 | [src/data/](src/data/) | 수정 없이 유지하는 JSON 데이터셋 |
 
-## 기술적 문제와 구현
+## 05. 기술적 문제와 구현
 
 ### 1. 제품이 늘어날 때 같은 원인이 중복 감점되는 문제
 
@@ -86,11 +110,13 @@
 
 구현: [BrowseButton.tsx](src/components/BrowseButton.tsx), [Sheet.tsx](src/components/Sheet.tsx) · 검증: [release-smoke.spec.ts](tests/release-smoke.spec.ts)
 
-## 실행과 검증
+## 06. 실행과 검증
 
 검증 환경: **Node.js 24.18.0 / npm 11.16.0 / Windows / Google Chrome**. 저장소를 내려받은 뒤 프로젝트 루트에서 실행합니다.
 
 ```sh
+git clone https://github.com/wowuwewn/FITMATE.git
+cd FITMATE
 npm ci
 npm run dev -- --host 127.0.0.1
 ```
@@ -105,6 +131,8 @@ npm run build
 npm run lint
 ```
 
+## 07. 검증 결과
+
 2026-11-06 로컬 실행 결과:
 
 | 검증 | 결과와 범위 |
@@ -116,8 +144,10 @@ npm run lint
 
 전체 브라우저 테스트 명령은 `npm run test:e2e`입니다. 위 결과는 Smoke와 단위 테스트의 실행 결과이며 전체 E2E suite 통과를 의미하지 않습니다. 배포 주소 검증과 수동 확인 절차는 [RUN.md](docs/RUN.md)를 참고하세요.
 
-## 문서와 발표 자료
+## 08. 문서와 발표 자료
 
 [PRD](docs/PRD.md) · [분석 엔진](docs/ANALYSIS_ENGINE.md) · [점수 정책](docs/SCORING_POLICY.md) · [실행 안내](docs/RUN.md) · [영상 소스](docs/VIDEO_CREDITS.md) · [Pretendard 라이선스](docs/licenses/PRETENDARD.txt)
+
+배지: [출처와 라이선스](docs/badges/LICENSE)
 
 30초 발표 영상 2종은 로컬 `artifacts/video/fitmate-demo-30s-final.mp4`, `fitmate-demo-30s-bgm.mp4`에 보관합니다. 영상·제작 원본·QA는 Git과 배포 업로드에서 제외하며, README 스크린샷만 `docs/screenshots/`에 포함합니다.
