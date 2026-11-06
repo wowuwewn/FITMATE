@@ -34,31 +34,37 @@
 
 ## 기술 선택
 
-| 선택 | 구현에서의 역할과 이유 |
-| --- | --- |
-| React + TypeScript + Vite | 화면과 분석 도메인을 분리하고, 제품·성분·분석 결과를 명시적 타입으로 연결했습니다. 현재 시연 범위는 정적 웹 앱으로 실행합니다. |
-| 로컬 JSON + 순수 분석 함수 | 네트워크 요청 없이 같은 입력을 같은 규칙으로 분석하고, UI와 분리해 경계 조건을 단위 테스트할 수 있도록 구성했습니다. |
-| localStorage | 별도 계정·서버 없이 시연 중 조합을 유지합니다. 읽은 데이터는 정규화하고, 쓰기 실패는 사용자에게 알립니다. |
-| Motion for React | 화면 전환·제품 선택·점수 변화에 모션을 적용하고 `prefers-reduced-motion` 설정을 반영합니다. |
-| Vitest + Playwright | 엔진의 계산·예외 조건과 브라우저에서의 검색·교체·저장·제스처를 나눠 검증합니다. |
+<p>
+  <img src="docs/icons/react.svg" width="40" height="40" alt="React" title="React" />&nbsp;&nbsp;
+  <img src="docs/icons/typescript.svg" width="40" height="40" alt="TypeScript" title="TypeScript" />&nbsp;&nbsp;
+  <img src="docs/icons/vite.svg" width="40" height="40" alt="Vite" title="Vite" />&nbsp;&nbsp;
+  <img src="docs/icons/vitest.svg" width="40" height="40" alt="Vitest" title="Vitest" />&nbsp;&nbsp;
+  <img src="docs/icons/playwright.svg" width="40" height="40" alt="Playwright" title="Playwright" />
+</p>
+
+- **React · TypeScript · Vite** — 화면과 분석 도메인을 분리하고, 제품·성분·결과를 타입으로 연결하는 정적 웹 앱입니다.
+- **로컬 JSON · localStorage** — 분석은 서버 요청 없이 재현 가능한 순수 함수로 실행합니다. 저장한 제품 구성은 검증·정규화해 복원하고, 저장 실패를 사용자에게 알립니다.
+- **Motion for React** — 제품 선택·화면 전환·점수 변화를 전달하며, `prefers-reduced-motion`을 반영합니다.
+- **Vitest · Playwright** — 계산·예외 조건과 실제 브라우저의 검색·교체·저장·제스처를 나눠 검증합니다.
+
+아이콘 출처와 라이선스: [Devicon](docs/icons/LICENSE).
 
 ## 데이터 흐름과 구조
 
-```text
-제품 선택 → App의 cart 상태 → analyzeCart(cart, analysisDataset)
-                                  ↑                 ↓
-                         원본 JSON → data.ts    AnalysisResult
-                                                    ↓
-                                  조합 점수·규칙·출처·미확인 정보 표시
+1. **제품 입력** — 탐색에서 제품을 선택하면 `App`의 `cart`에 제품 ID와 용기 수량을 반영합니다.
+2. **데이터 연결** — `data.ts`가 두 원본 JSON을 `analysisDataset`으로 연결합니다.
+3. **성분 분석** — `analyzeCart(cart, analysisDataset)`가 제품 쌍의 성분 관계·필수 조건을 확인하고, 점수 정책을 적용합니다.
+4. **결과 표시** — `AnalysisResult`의 조합 점수·관련 규칙·출처·미확인 정보를 화면에 표시합니다.
 
-제품 교체 후보 → 동일 analyzeCart로 전후 비교 → 확정 시 cart 갱신
-조합 저장 → 제품 ID·용기 수량을 localStorage에 보관 → 복원 시 재계산
-```
+**교체 비교**는 후보마다 같은 엔진으로 전후를 계산하고 확정 시 `cart`를 갱신합니다. **저장·복원**은 제품 구성을 localStorage에 보관하며, 불러올 때 현재 데이터로 다시 분석합니다.
 
-- [`src/App.tsx`](src/App.tsx): 해시 기반 6개 화면 전환과 조합·저장 상태 연결. 결과·최적화·보관함은 지연 로딩합니다.
-- [`src/analysis/`](src/analysis/): 데이터 어댑터, 조건 평가, 성분 관계 분석, 점수 정책, 교체 비교. React와 저장소에 의존하지 않는 계산 영역입니다.
-- [`src/lib/`](src/lib/): 카탈로그·이미지 매핑과 저장 데이터 검증.
-- [`src/screens/`](src/screens/), [`src/components/`](src/components/): 화면과 공통 UI. 원본 데이터는 [`src/data/`](src/data/)에 유지합니다.
+| 영역 | 코드 | 책임 |
+| --- | --- | --- |
+| 화면·상태 연결 | [App.tsx](src/App.tsx) | 해시 기반 6개 화면, 조합·저장 상태, 결과·최적화·보관함 지연 로딩 |
+| 분석 도메인 | [src/analysis/](src/analysis/) | 데이터 연결, 조건 평가, 성분 관계·점수 계산, 교체 비교 |
+| 저장·표시 도우미 | [src/lib/](src/lib/) | 카탈로그·이미지 매핑, 저장 데이터 검증·정규화 |
+| UI | [screens](src/screens/) · [components](src/components/) | 화면과 공통 컴포넌트 |
+| 원본 데이터 | [src/data/](src/data/) | 수정 없이 유지하는 JSON 데이터셋 |
 
 ## 기술적 문제와 구현
 
