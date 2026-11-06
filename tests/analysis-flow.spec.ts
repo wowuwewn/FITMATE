@@ -45,7 +45,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 375, height: 667 }
       await expect(page.locator('.result-summary > p').first()).toHaveCSS('font-size', '15px')
       await noOverflow(page)
       await page.evaluate(() => document.fonts.ready)
-      await page.screenshot({ path: `docs/qa/updated-result-${viewport.width}x${viewport.height}.png` })
+      await page.screenshot({ path: `artifacts/qa/updated-result-${viewport.width}x${viewport.height}.png` })
       await page.getByRole('button', { name: '변경한 조합 저장하기' }).click()
       await expect(page.getByRole('button', { name: '내 정보에 저장됨' })).toBeVisible()
       const persisted = await page.evaluate(() => JSON.parse(localStorage.getItem('fitmate.cart.v1')!))

@@ -1,49 +1,39 @@
-# Fitmate 최종 시연 영상 — 소스와 이용 기록
+# FITMATE 30초 발표 영상 — 소스와 재현
 
-제작일: 2026-11-06 (Asia/Seoul).
+제작 기록: 2026-11-06 (Asia/Seoul). 현재 보관하는 동영상은 아래 두 파일입니다.
 
-## 실제 앱 화면
+| 파일 | 내용 |
+| --- | --- |
+| `artifacts/video/fitmate-demo-30s-final.mp4` | 실제 앱 화면·한국어 내레이션·자막·BGM |
+| `artifacts/video/fitmate-demo-30s-bgm.mp4` | 동일 화면·자막·BGM, 내레이션 없음 |
 
-- 대상: https://fitmate-team3.vercel.app
-- Production 배포: `dpl_6U1twtAtXSbLZ2yYS8KKaVLWUqWD`, 앱 커밋 `cc18dcd`.
-- Chrome/Playwright로 실제 검색·담기·R06 근거 열기·교체·저장을 조작했다. 제품, 점수, 분석 문구를 합성하거나 교체하지 않았다.
-- CSS 화면 390×844, 실제 캡처 780×1688. 전체 앱을 잘라내지 않고 1920×1080 중립색 캔버스에 배치했다. 핵심 구간만 최대 1.12배 확대한다.
-- 화면 외부의 시각 요소는 발화에 맞춘 하단 한국어 자막뿐이다. URL, 별도 제목, 설명 카드, 점수 오버레이를 넣지 않았다.
-- 원본 42.10–42.53초의 로딩 대기만 컷 편집했다. 실제 점수 애니메이션을 보존했고, 이후 자막·음성·클릭 시각을 0.43초 앞당겼다. 최종 영상은 약 55.6초다.
+두 파일은 30초, 1920×1080, 30fps, H.264/yuv420p + AAC 48kHz stereo 형식입니다. 기존 55초 영상·중복 백업·WEBM 및 렌더링용 원본 MP4는 사용자 요청으로 삭제했습니다.
 
-## 음악·효과음
+## 실제 화면과 편집
 
-- 음악: **Fitmate Original Ambient**, 이 프로젝트를 위해 직접 합성한 56초 오리지널 신스·앰비언트 연주.
-- 사인파 기반 패드, 플럭, 베이스와 절제된 노이즈 퍼커션. 92 BPM. 외부 상업 음악, 다운로드 음원, 타인의 녹음·샘플을 사용하지 않았다.
-- 기존 제작 원본의 독자적인 합성 코드를 재사용하고, 교체 장면의 차임을 새 촬영의 실제 클릭 시각에 맞췄다.
-- 효과음도 수학적 파형으로 직접 합성했다. 실제 클릭 시각은 `artifacts/video/recording.json`에 기록한다.
-- 이 프로젝트의 공개 발표·시연 영상에 사용하기 위해 제작했다. 별도의 제3자 음원 라이선스나 구독이 필요하지 않다. 법적 저작권 귀속에 관한 추가 보증을 의미하지는 않는다.
-- 원본: `artifacts/video/fitmate-original-bgm.wav`
-- 제작 코드: `artifacts/video/tools/sound_release.py`
-- 기존 제작 코드 보존: `artifacts/video/previous-release/tools/prepare.py`
+Chrome/Playwright로 실제 제품 검색·담기·R06 근거 확인·P01 교체·저장을 조작한 화면을 사용했습니다. 제품·점수·분석 문구를 영상용으로 바꾸지 않았습니다. 컷 구간과 대본은 `artifacts/video/short30/project.json`에 있습니다.
 
-## 한국어 합성 음성
+앱 전체를 고정 배치하고 오른쪽 여백에 64px 한국어 자막을 표시합니다. 화면 배속·동적 줌·클릭 효과음은 사용하지 않습니다. 가상 제품과 시연용 비교 점수이며 88→100은 의학적 안전성 개선을 보장하지 않습니다.
 
-- 설치된 Windows 음성 **Microsoft Heami Desktop**, `System.Speech.Synthesis.SpeechSynthesizer`를 사용했다.
-- 유료 API, 새로운 가입, 외부 TTS 서비스, 실제 인물의 목소리 복제는 사용하지 않았다.
-- 기본 발화 속도 0. 첫 구간만 5초 안에 맞추기 위해 FFmpeg `atempo` 약 1.21배를 적용했다. 나머지는 원래 속도다.
-- 내레이션은 약 -18 LUFS로 정규화한 후 음악을 덕킹해 최종 약 -16 LUFS로 혼합했다. BGM 전용 버전에는 음성이 없다.
-- 대본: `artifacts/video/narration-ko.txt`
-- 구간별 음성: `artifacts/video/work/voice-*.wav`
-- 실제 측정 발화 시간: `artifacts/video/voice-timing.json`
-- 자막: `artifacts/video/fitmate-demo-ko.srt`
+## 음성·음악·글꼴
 
-## 글꼴·기존 자산
+- 내레이션: `edge-tts`를 통한 Microsoft `ko-KR-HyunsuMultilingualNeural`. 녹음된 실제 인물의 음성 복제는 사용하지 않았습니다. 원본 MP3와 단어 경계 JSON은 `artifacts/video/short30/work/voice-*`에 유지합니다.
+- BGM: v2 제작 코드에서 수학적 파형과 고정 난수로 합성한 108 BPM 오리지널 곡을 재사용했습니다. 외부 음원·샘플을 최종 영상에 넣지 않았습니다. 원본은 `artifacts/video/v2/fitmate-v2-original-bgm.wav`, 재사용하는 정규화 음악은 `v2/work/music-normalized.wav`입니다.
+- 자세한 음원·합성 음성 제작 기록은 `artifacts/video/v2/VIDEO_CREDITS.md`에 있습니다. 제작 도구에 대한 기록이며 법적 권리 귀속을 추가 보증하지 않습니다.
+- 앱 글꼴은 Pretendard이며 라이선스는 [PRETENDARD.txt](licenses/PRETENDARD.txt)에 보관합니다. 영상 자막은 설치된 Windows 맑은 고딕으로 렌더링했고 글꼴 파일을 별도 배포하지 않습니다.
 
-- 앱은 기존 Pretendard Variable과 기존 패키지 목업을 사용한다. 글꼴 원본 라이선스는 설치 패키지와 프로토타입에 보존한다.
-- 영상 자막은 설치된 Windows 맑은 고딕으로 렌더링했다. 글꼴 파일을 별도로 배포하지 않는다.
-- 제품 이미지·성분 데이터는 가상 시연용이다. 88→100은 등록된 규칙에 따른 비교 점수 변화이며 의학적 안전성 개선을 보장하지 않는다.
+## 재제작 시 필요한 것
 
-## 재현과 보존
+촬영 프레임 1,531장(`artifacts/video/raw/frames-2x/`)과 타이밍·조작 기록(`artifacts/video/recording.json`), 원본 음성·음악·대본·제작 코드는 보존했습니다. **현재 남은 자료로 원본 MP4를 재인코딩할 수 있어 재촬영이 필요하지 않습니다.** 촬영 프레임까지 삭제하면 동일 화면의 복원이 어려워집니다.
 
-1. `FITMATE_VIDEO_URL`을 검증한 Production URL로 지정하고 `node artifacts/video/tools/record.mjs`를 실행한다.
-2. `python artifacts/video/tools/prepare_release.py`, PowerShell `artifacts/video/tools/tts.ps1`, `python artifacts/video/tools/mix_voice.py` 순서로 음성을 만든다.
-3. `python artifacts/video/tools/sound_release.py`, `python artifacts/video/tools/render_release.py`로 두 MP4를 렌더링한다.
-4. `python artifacts/video/tools/verify_release.py`로 전 구간 디코딩·스트림·오디오와 주요 프레임을 검수한다.
+다음 명령은 재제작할 때만 실행합니다. Python 제작 환경에는 numpy·Pillow·imageio-ffmpeg가 필요하며, 기존 `artifacts/video/v2/vendor/`에는 TTS 도구가 보관돼 있습니다. 저장된 음성을 재사용하므로 TTS 서비스 재호출은 필요하지 않습니다.
 
-이전 영상·녹화·제작 원본은 `artifacts/video/previous-release/`에 보존했다. 모든 영상과 QA는 `artifacts/` 아래에 있고 `.vercelignore`로 배포에서 제외된다.
+```sh
+python artifacts/video/tools/render_release.py raw
+python artifacts/video/short30/tools/make.py
+python artifacts/video/short30/tools/verify.py
+```
+
+첫 명령은 중간 입력 `artifacts/video/raw/fitmate-production.mp4`를 다시 만듭니다. 두 번째는 저장된 MP3·단어 경계·음악을 사용해 중간 파일과 30초 최종본 2종을 생성합니다. 세 번째는 스트림·전체 디코딩·오디오와 주요 프레임을 검수하며 로컬 QA 파일을 생성합니다.
+
+영상·제작 원본·QA는 `artifacts/` 아래에만 있으며 `.gitignore`와 `.vercelignore`로 Git 및 배포 업로드에서 제외합니다. 현재 앱의 실행·빌드에는 영상 제작 환경이 필요하지 않습니다.

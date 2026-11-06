@@ -130,7 +130,7 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 375, height: 667 }
       expect(frames.every(frame => frame.transform === 'none' && frame.bottom <= viewport.height + 1)).toBe(true)
       await ready(page, 'optimize')
       await assertBounds(page)
-      await page.screenshot({ path: `docs/qa/layout-${viewport.width}x${viewport.height}.png` })
+      await page.screenshot({ path: `artifacts/qa/layout-${viewport.width}x${viewport.height}.png` })
       expect(errors).toEqual([])
     })
   })

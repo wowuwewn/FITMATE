@@ -19,9 +19,7 @@ import { shouldShowIntro } from './lib/intro'
 import { ProductDetails } from './components/ProductDetails'
 import type { Product } from './lib/catalog'
 import type { ExploreRequest } from './lib/categories'
-import './App.css'
-import './styles/v4.css'
-import './styles/refinements.css'
+import './styles/app.css'
 
 const Result = lazy(() => import('./screens/Result').then(module => ({ default: module.Result })))
 const Optimize = lazy(() => import('./screens/Optimize').then(module => ({ default: module.Optimize })))

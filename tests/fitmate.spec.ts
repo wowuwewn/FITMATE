@@ -20,7 +20,7 @@ async function settled(page: Page) {
 }
 async function shot(page: Page, name: string) {
   await settled(page)
-  await page.screenshot({ path: `docs/qa/${name}.png` })
+  await page.screenshot({ path: `artifacts/qa/${name}.png` })
 }
 
 test('홈과 실제 탭 전환, 검색, 카테고리, 정렬, 이미지 필터', async ({ page }) => {
