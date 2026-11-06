@@ -15,7 +15,7 @@ export function Saved({ combinations, onLoad, onRemove, onExplore }: { combinati
       <button className="saved-load" onClick={() => onLoad(combination)}>조합 불러오기 <ArrowRight size={15} /></button>
     </article>)}</div>}
     <div className="service-information">
-      <details><summary>현재 서비스 안내</summary><div><p>카탈로그의 제품 구성과 이미지는 실제 상품과 다를 수 있어요. 복용 전에는 제품 라벨을 확인하세요.</p><p>조합함과 저장한 조합은 이 브라우저에만 저장돼요. 브라우저 데이터를 지우면 기록이 사라지고, 다른 기기와 동기화되지 않아요.</p><p>실제 섭취량·복용 시간·개인 상태·유당 함량은 확인하지 않아 정량·독성·알레르기 판정과 시너지 분석은 지원하지 않아요.</p></div></details>
+      <details><summary>현재 서비스 안내</summary><div><p>카탈로그는 가상의 시연용 제품과 이미지로 구성되어 실제 상품·라벨을 나타내지 않아요.</p><p>조합함과 저장한 조합은 이 브라우저에만 저장돼요. 브라우저 데이터를 지우면 기록이 사라지고, 다른 기기와 동기화되지 않아요.</p><p>실제 섭취량·복용 시간·개인 상태·유당 함량은 확인하지 않아 정량·독성·알레르기 판정과 시너지 분석은 지원하지 않아요.</p></div></details>
       <details><summary>점수 계산 방식</summary><div><p>성분 관계를 비교하는 점수이며 의학적 안전성 평가가 아니에요. 100점도 안전·효능을 보장하지 않아요.</p><p>기준 {SCORING_POLICY.baseline}에서 고유 성분 관계별로 참고 {SCORING_POLICY.weights.info}점, 주의 {SCORING_POLICY.weights.caution}점, 우선 확인 {SCORING_POLICY.weights.high}점을 한 번씩 차감해요. 최저 지표는 0점이에요.</p><p>비교 가능한 제품 쌍이 없거나 필수 규칙을 평가하지 못하면 숫자 대신 정보 부족으로 표시해요. 수량은 용기 개수이며 섭취량으로 계산하지 않아요.</p><p>각 조합의 상세 정보에서 계산 근거와 출처를 확인할 수 있어요.</p></div></details>
     </div>
   </section>

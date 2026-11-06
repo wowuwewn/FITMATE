@@ -43,10 +43,11 @@ export function AnalysisLimitations({ analysis }: { analysis: AnalysisResult }) 
   return <details className="analysis-limitations">
     <summary>분석 기준</summary>
     <div className="limitation-content">
+      <p>등록된 규칙과 확인 가능한 성분 정보에 따른 설명이에요. AI 생성 답변이 아니에요.</p>
       <ProductAndScoreDetails analysis={analysis} />
       <p>함량 미확인 {coverage.unknownAmounts}개 · 추가 조건 {analysis.deferredRules.length}개 미평가. 실제 섭취량·복용 시간·개인 상태는 반영하지 않았어요.</p>
       {(coverage.missingIngredientProducts > 0 || coverage.unregisteredIngredients > 0 || coverage.skippedRules > 0) && <p>성분 정보가 없는 제품 {coverage.missingIngredientProducts}개 · 미등록 성분 {coverage.unregisteredIngredients}개 · 평가하지 못한 규칙 {coverage.skippedRules}개.</p>}
-      <p>점수는 성분 관계의 비교값이며 의학적 안전성을 보장하지 않아요. 복용약 변경은 의료진·약사와 확인하세요.</p>
+      <p>규칙 기반 시연용 비교 점수이며, 100점도 의학적 안전성을 보장하지 않아요. 복용약 변경은 의료진·약사와 확인하세요.</p>
     </div>
   </details>
 }

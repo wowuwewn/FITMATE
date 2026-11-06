@@ -44,6 +44,7 @@ export function Explore({ cart, onAdd, onRemove, onBack, request, onProduct }: {
         <label className="checkbox-label"><input type="checkbox" checked={onlyAvailableImage} onChange={event => setOnlyAvailableImage(event.target.checked)} />이미지가 있는 제품만</label>
       </div>}
       <div className="catalog-list">
+        <p className="catalog-disclosure">가상 제품으로 살펴보는 조합 비교예요.</p>
         {visible.map(product => {
           const count = cart.find(item => item.productId === product.product_id)?.quantity ?? 0
           return <article className="product-row" key={product.product_id}>

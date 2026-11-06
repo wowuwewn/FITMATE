@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
 import { animate, motion, useMotionValue, useReducedMotion, useTransform } from 'motion/react'
 
-export function ScoreGauge({ value }: { value: number | null }) {
+export function ScoreGauge({ value, previousValue }: { value: number | null; previousValue?: number | null }) {
   const reducedMotion = useReducedMotion()
   const target = value ?? 0
-  const count = useMotionValue(target)
+  const count = useMotionValue(reducedMotion ? target : previousValue ?? target)
   const rounded = useTransform(count, latest => Math.round(latest))
   const offset = useTransform(count, latest => 100 - latest)
   useEffect(() => {

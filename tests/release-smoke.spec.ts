@@ -10,6 +10,15 @@ async function screenshot(page: Page, name: string) {
 }
 
 async function ready(page: Page) {
+  await expect(page.locator('.intro-screen')).toHaveCount(0)
+  if (await page.locator('.home-cover').count()) {
+    for (let index = 0; index < 3; index++) {
+      await page.locator('.home-cover').press('ArrowRight')
+      await expect(page.locator(`.cover-page--${index}`)).toHaveCount(0)
+      if (index < 2) await expect(page.locator(`.cover-page--${index + 1}`)).toHaveCSS('transform', 'none')
+    }
+    await expect(page.locator('.home-cover')).toHaveCount(0)
+  }
   await expect(page.locator('main')).toHaveCSS('opacity', '1')
   await page.evaluate(() => document.fonts.ready)
 }
@@ -20,8 +29,6 @@ test('A–D: 실제 탐색 → 88/R06 → 규칙 설명 → P01 교체/100 → �
   page.on('pageerror', error => errors.push(error.message))
   await page.route('**/api/explain', route => { apiCalls++; return route.abort() })
   await page.goto('/')
-  await expect(page.locator('.intro-overlay')).toHaveCount(0)
-  await expect.poll(() => page.evaluate(() => localStorage.getItem('fitmate.intro.seen.v1'))).toBe('true')
   await ready(page)
   await screenshot(page, 'home-390x844')
   await page.getByRole('searchbox', { name: '홈 제품 또는 성분 검색' }).fill('프로틴 B')
@@ -37,13 +44,16 @@ test('A–D: 실제 탐색 → 88/R06 → 규칙 설명 → P01 교체/100 → �
   await screenshot(page, 'cart-88-390x844')
   await page.getByRole('button', { name: '상세 정보 확인', exact: true }).click()
   const details = page.getByRole('dialog', { name: '조합 상세 정보' })
+  await details.getByRole('button', { name: '마이너스 조합', exact: true }).click()
+  await details.getByText('근거와 출처', { exact: true }).click()
   await expect(details.locator('.rule-detail')).toContainText('R06')
+  await expect(details.locator('.rule-detail')).toContainText('프로틴 B')
   await expect(details.locator('.evidence-links a').first()).toHaveAttribute('href', /^https:/)
+  await details.getByText('분석 기준', { exact: true }).click()
+  await expect(details.locator('.limitation-content')).toContainText('100점 − 감점 12점 = 88점')
+  await expect(details.locator('.limitation-content')).toContainText('규칙 기반')
+  await screenshot(page, 'rule-evidence-390x844')
   await page.keyboard.press('Escape')
-  await page.getByRole('button', { name: '점수 계산 과정을 알려주세요' }).click()
-  await expect(page.locator('.rule-answer')).toContainText('88점')
-  await expect(page.locator('.rule-answer')).toContainText('AI 생성 아님')
-  await expect(page.locator('.rule-answer')).toContainText('R06')
   expect(apiCalls).toBe(0)
   await page.getByRole('button', { name: '최적화 분석', exact: true }).click()
   await expect(page.getByTestId('before-score')).toHaveText('88점')
@@ -75,7 +85,6 @@ for (const viewport of [{ width: 390, height: 844 }, { width: 1440, height: 900 
       const errors: string[] = []
       page.on('pageerror', error => errors.push(error.message))
       await page.addInitScript(() => {
-        localStorage.setItem('fitmate.intro.seen.v1', 'true')
         localStorage.setItem('fitmate.cart.v1', JSON.stringify([{ productId: 'P02', quantity: 1 }, { productId: 'M02', quantity: 1 }]))
       })
       for (const screen of ['home', 'explore', 'cart', 'result', 'optimize', 'saved']) {

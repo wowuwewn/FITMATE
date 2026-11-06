@@ -44,6 +44,7 @@ export function Cart({ cart, analysis, onQuantity, onRemove, onExplore, onDemo, 
         <p className="cart-analysis-summary" role="status"><span className="sr-only">조합 점수 {analysis.score.value ?? '—'}{analysis.score.value !== null && '/100'} · 주의·중복 {analysis.findings.length}건. </span><span>{cart.reduce((sum, item) => sum + item.quantity, 0)}용기 · 함량 미확인 {analysis.coverage.unknownAmounts}개</span></p>
         <div className="cart-analysis-actions"><button className="secondary-button" aria-label="상세 정보 확인" onClick={() => setDetails(true)}>상세 보기 <ArrowRight size={17} /></button><button className="secondary-button optimize-cart-button" disabled={cart.length < 2} onClick={onOptimize}>최적화 분석 <ArrowRight size={17} /></button></div>
       </div>
+      <p className="catalog-disclosure">시연용 비교 점수 · 의학적 안전성 평가가 아니에요.</p>
       {cart.length === 0 ? <div className="empty-state cart-empty">
         <ShoppingCart /><h2>어떤 조합을 먹고 있나요?</h2><p>함께 확인할 제품을 담아보세요.<br />복용 중인 약도 함께 확인할 수 있어요.</p>
         <button className="primary-button" onClick={onExplore}>제품 담으러 가기 <ArrowRight /></button>

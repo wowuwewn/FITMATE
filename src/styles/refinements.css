@@ -1,6 +1,7 @@
 /* Requested release refinements: swipeable opening, compact analysis screens. */
 /* A single cover is physically dismissed to reveal the existing home. */
 .home-header-actions { display: flex; align-items: center; gap: 3px; }
+.catalog-disclosure { color: var(--muted); font-size: 12px; line-height: 1.6; margin: 12px 0; }
 .home-cover {
   position: fixed; z-index: 80; inset: 0; margin-inline: auto;
   width: min(100%, 430px); background: white;
@@ -22,8 +23,6 @@
 .cover-copy p { margin-top: 23px; font-size: 16px; line-height: 1.65; color: #5d6d7d; }
 .cover-image { position: relative; flex: 1; min-height: 120px; background: #f2f4f6; display: grid; place-items: center; }
 .cover-image img { position: absolute; width: 80%; height: 82%; object-fit: contain; pointer-events: none; }
-.cover-enter { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; min-height: 72px; padding: 10px 16px calc(10px + env(safe-area-inset-bottom)); color: var(--accent-ink); font-size: 13px; flex-shrink: 0; }
-.cover-enter:focus-visible { outline-offset: -5px; }
 .combination-groups { margin: 20px 0; border-top: 1px solid var(--line); }
 .combination-group { border-bottom: 1px solid var(--line); }
 .combination-group > summary { cursor: pointer; padding: 17px 2px; font-size: 17px; font-weight: 700; }
@@ -35,8 +34,6 @@
 .combination-group-body > p + p { margin-top: 9px; }
 .combination-group-body .secondary-button { margin-top: 15px; }
 .combination-group-body .rule-detail:first-child { padding-top: 0; }
-.combination-groups--links { margin-bottom: 20px; }
-.combination-groups--links > button { display: flex; align-items: center; justify-content: space-between; width: 100%; text-align: left; padding: 17px 0; border-bottom: 1px solid var(--line); font-size: 16px; font-weight: 650; }
 
 .cart-heading-row { margin-bottom: 14px; }
 .cart-score-card .score-gauge { width: 138px; height: 138px; flex-basis: 138px; }
@@ -63,13 +60,7 @@
 .result-screen--compact .result-summary { margin: 5px 0 0; }
 .result-screen--compact .result-product-summary { margin-top: 10px; font-size: 14px; color: var(--muted); }
 .result-screen--compact .change-confirmation { margin-bottom: 9px; font-size: 13px; }
-.result-facts { margin: 25px 0 23px; padding: 19px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); display: flex; gap: 35px; }
-.result-facts > div { display: flex; gap: 9px; align-items: baseline; }
-.result-facts dt { font-size: 14px; color: var(--muted); }
-.result-facts dd { font-size: 17px; font-weight: 700; margin: 0; }
-.result-safety { font-size: 13px; line-height: 1.7; color: var(--muted); margin-top: 18px; }
 .result-screen--compact { padding-bottom: 115px; }
-.rule-calculation { font-size: 15px; line-height: 1.7; padding: 16px 0; border-top: 1px solid var(--line); margin-top: 20px; }
 
 @media (max-width: 359px) {
   .cover-copy { padding: 5px 22px 18px; }
@@ -81,7 +72,6 @@
   .cart-score-top { gap: 17px; }
   .cart-score-card .score-value { font-size: 39px; }
   .result-screen--compact .detail-header h1 { font-size: 22px; }
-  .result-facts { gap: 22px; }
 }
 @media (min-width: 600px) {
   .home-cover { inset-block: 30px; width: 428px; border-radius: 32px; }

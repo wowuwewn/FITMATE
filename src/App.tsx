@@ -135,7 +135,7 @@ function App() {
           const candidate = getReplacementCandidates(cart, sourceId, analysisDataset).find(item => item.product.product_id === targetId)
           if (!candidate) { setToast('등록된 성분으로 비교할 수 있는 제품을 선택해주세요'); return }
           setCart(candidate.items)
-          setReplacement({ fromName: productById.get(sourceId)?.name ?? sourceId, toName: productById.get(targetId)?.name ?? targetId })
+          setReplacement({ fromName: productById.get(sourceId)?.name ?? sourceId, toName: productById.get(targetId)?.name ?? targetId, previousScore: analysis.score.value })
           navigate('result')
           setToast('변경된 조합을 다시 분석했어요')
         }} />
